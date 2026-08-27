@@ -1,0 +1,6 @@
+{
+  "name": "CROPIQ",
+  "description": "Smart solar-powered agricultural cold storage & fresh crop management platform with real-time telemetry, freshness analytics, and market readiness dispatching.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
