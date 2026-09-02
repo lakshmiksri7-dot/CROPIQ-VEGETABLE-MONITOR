@@ -4,18 +4,25 @@ import { UserProfile, AppLanguage, ScreenId } from '../../types';
 
 interface ProfileScreenProps {
   userProfile: UserProfile;
+  language: AppLanguage;
+  onSetLanguage: (lang: AppLanguage) => void;
   onUpdateProfile: (updated: Partial<UserProfile>) => void;
   onOpenChatSupport: () => void;
+  onOpenInstallModal?: () => void;
   onNavigate: (screen: ScreenId) => void;
 }
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   userProfile,
+  language,
+  onSetLanguage,
   onUpdateProfile,
   onOpenChatSupport,
+  onOpenInstallModal,
   onNavigate
 }) => {
   const handleLanguageChange = (lang: AppLanguage) => {
+    onSetLanguage(lang);
     onUpdateProfile({ language: lang });
   };
 
@@ -27,17 +34,17 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   return (
     <div className="w-full max-w-4xl mx-auto px-4 pt-4 pb-28 space-y-5 md:grid md:grid-cols-12 md:gap-4 md:space-y-0">
       {/* Profile Header Card */}
-      <div className="md:col-span-12 bg-[#121212] rounded-[2rem] p-6 border border-white/5 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+      <div className="md:col-span-12 bg-[#121212] rounded-[2.5rem] p-6 border border-emerald-500/30 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden bg-gradient-to-r from-emerald-950/20 via-[#121212] to-[#121212]">
         {/* Profile Avatar */}
         <div className="relative w-28 h-28 sm:w-32 sm:h-32 shrink-0">
           <img
             alt="Farmer Profile"
-            className="w-full h-full object-cover rounded-2xl border-2 border-white/10"
+            className="w-full h-full object-cover rounded-3xl border-2 border-emerald-500/40 shadow-xl"
             src={ASSETS.farmerProfilePhoto}
           />
           <button
-            onClick={() => alert('Profile photo change dialog')}
-            className="absolute -bottom-2 -right-2 bg-orange-500 text-black rounded-xl w-8 h-8 flex items-center justify-center shadow-lg hover:bg-orange-400 transition-colors"
+            onClick={() => alert('Farmer profile photo manager')}
+            className="absolute -bottom-2 -right-2 bg-emerald-500 text-black rounded-xl w-8 h-8 flex items-center justify-center shadow-lg hover:bg-emerald-400 transition-colors"
             title="Edit Photo"
           >
             <span className="material-symbols-outlined text-base font-bold">edit</span>
@@ -46,29 +53,29 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
         {/* Info */}
         <div className="text-center md:text-left flex-1 relative z-10">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-orange-500 font-bold block mb-1">
-            Registered Operator
+          <span className="text-[10px] uppercase tracking-[0.3em] text-emerald-400 font-bold block mb-1">
+            Registered Progressive Farmer / FPO Leader
           </span>
-          <h1 className="text-2xl sm:text-3xl font-light text-[#f0f0f0]">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
             {userProfile.name}
           </h1>
-          <p className="text-xs font-mono text-white/50 mt-0.5">
-            Facility ID: {userProfile.memberId}
+          <p className="text-xs font-mono text-emerald-400/80 mt-0.5">
+            Farmer ID: {userProfile.memberId} • Mobile: +91 94350-12844
           </p>
 
           <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
             <span className="bg-white/5 border border-white/10 text-white/80 px-3.5 py-1.5 rounded-full text-xs font-mono flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-orange-400 text-[16px]">
+              <span className="material-symbols-outlined text-emerald-400 text-[16px]">
                 location_on
               </span>
               <span>{userProfile.location}</span>
             </span>
 
-            <span className="bg-orange-500/15 border border-orange-500/30 text-orange-400 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-orange-400 text-[16px]">
+            <span className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-emerald-400 text-[16px]">
                 warehouse
               </span>
-              <span>Unit: {userProfile.storageUnit}</span>
+              <span>Primary Unit: {userProfile.storageUnit}</span>
             </span>
           </div>
         </div>
@@ -79,29 +86,32 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         {/* Language Settings */}
         <section className="bg-[#121212] rounded-[2rem] p-6 border border-white/5">
           <div className="flex items-center gap-2 mb-4">
-            <span className="material-symbols-outlined text-orange-400">language</span>
-            <h2 className="text-base font-medium text-[#f0f0f0]">Language Localization</h2>
+            <span className="material-symbols-outlined text-emerald-400">language</span>
+            <h2 className="text-base font-bold text-white">Language / ভাষা / भाषा</h2>
           </div>
 
           <div className="space-y-2.5">
-            {/* English */}
+            {/* Assamese */}
             <label
-              onClick={() => handleLanguageChange('en')}
+              onClick={() => handleLanguageChange('as')}
               className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                userProfile.language === 'en'
-                  ? 'border-orange-500 bg-orange-500/10 text-white'
+                language === 'as'
+                  ? 'border-emerald-500 bg-emerald-500/15 text-white shadow-md'
                   : 'border-white/5 bg-white/5 text-white/70 hover:bg-white/10'
               }`}
             >
-              <span className="text-xs font-mono">English (International)</span>
+              <div className="flex items-center gap-2">
+                <span className="text-base">🇮🇳</span>
+                <span className="text-xs font-bold">Assamese (অসমীয়া) - উত্তৰ-পূব আঞ্চলিক</span>
+              </div>
               <div
                 className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                  userProfile.language === 'en'
-                    ? 'border-orange-500 bg-orange-500'
+                  language === 'as'
+                    ? 'border-emerald-500 bg-emerald-500'
                     : 'border-white/20'
                 }`}
               >
-                {userProfile.language === 'en' && (
+                {language === 'as' && (
                   <div className="w-1.5 h-1.5 rounded-full bg-black" />
                 )}
               </div>
@@ -111,45 +121,49 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <label
               onClick={() => handleLanguageChange('hi')}
               className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                userProfile.language === 'hi'
-                  ? 'border-orange-500 bg-orange-500/10 text-white'
+                language === 'hi'
+                  ? 'border-emerald-500 bg-emerald-500/15 text-white shadow-md'
                   : 'border-white/5 bg-white/5 text-white/70 hover:bg-white/10'
               }`}
             >
-              <span className="text-xs font-mono">Hindi (हिंदी)</span>
+              <div className="flex items-center gap-2">
+                <span className="text-base">🇮🇳</span>
+                <span className="text-xs font-bold">Hindi (हिंदी) - किसान इंटरफ़ेस</span>
+              </div>
               <div
                 className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                  userProfile.language === 'hi'
-                    ? 'border-orange-500 bg-orange-500'
+                  language === 'hi'
+                    ? 'border-emerald-500 bg-emerald-500'
                     : 'border-white/20'
                 }`}
               >
-                {userProfile.language === 'hi' && (
+                {language === 'hi' && (
                   <div className="w-1.5 h-1.5 rounded-full bg-black" />
                 )}
               </div>
             </label>
 
-            {/* Assamese */}
+            {/* English */}
             <label
-              onClick={() => handleLanguageChange('as')}
+              onClick={() => handleLanguageChange('en')}
               className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                userProfile.language === 'as'
-                  ? 'border-orange-500 bg-orange-500/10 text-white'
+                language === 'en'
+                  ? 'border-emerald-500 bg-emerald-500/15 text-white shadow-md'
                   : 'border-white/5 bg-white/5 text-white/70 hover:bg-white/10'
               }`}
             >
-              <span className="text-xs font-mono">
-                Assamese (অসমীয়া)
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-base">🌐</span>
+                <span className="text-xs font-mono font-bold">English (Standard)</span>
+              </div>
               <div
                 className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                  userProfile.language === 'as'
-                    ? 'border-orange-500 bg-orange-500'
+                  language === 'en'
+                    ? 'border-emerald-500 bg-emerald-500'
                     : 'border-white/20'
                 }`}
               >
-                {userProfile.language === 'as' && (
+                {language === 'en' && (
                   <div className="w-1.5 h-1.5 rounded-full bg-black" />
                 )}
               </div>
@@ -160,17 +174,17 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         {/* Alert Preferences */}
         <section className="bg-[#121212] rounded-[2rem] p-6 border border-white/5">
           <div className="flex items-center gap-2 mb-4">
-            <span className="material-symbols-outlined text-orange-400">
+            <span className="material-symbols-outlined text-emerald-400">
               notifications_active
             </span>
-            <h2 className="text-base font-medium text-[#f0f0f0]">Alert Channels</h2>
+            <h2 className="text-base font-bold text-white">Farmer Alert Channels</h2>
           </div>
 
           <div className="space-y-4 divide-y divide-white/5">
             <div className="flex items-center justify-between pt-1">
               <div>
-                <p className="text-sm font-light text-[#f0f0f0]">Critical Incident SMS</p>
-                <p className="text-xs font-mono text-white/40">Thermal / relative humidity spike dispatch</p>
+                <p className="text-sm font-bold text-white">Critical Door & Cooling Incident SMS</p>
+                <p className="text-xs font-mono text-white/40">Automated SMS to registered farmer mobile</p>
               </div>
 
               <label className="relative inline-flex items-center cursor-pointer">
@@ -180,14 +194,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   onChange={(e) => onUpdateProfile({ smsAlerts: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500" />
+                <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
               </label>
             </div>
 
             <div className="flex items-center justify-between pt-3.5">
               <div>
-                <p className="text-sm font-light text-[#f0f0f0]">App Push Telemetry</p>
-                <p className="text-xs font-mono text-white/40">Daily microgrid & storage digests</p>
+                <p className="text-sm font-bold text-white">App Push & Telemetry Digest</p>
+                <p className="text-xs font-mono text-white/40">Daily microgrid solar & mandi price alerts</p>
               </div>
 
               <label className="relative inline-flex items-center cursor-pointer">
@@ -197,7 +211,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   onChange={(e) => onUpdateProfile({ appAlerts: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500" />
+                <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
               </label>
             </div>
           </div>
@@ -209,21 +223,21 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         <section className="bg-[#121212] rounded-[2rem] p-6 border border-white/5 flex flex-col justify-between h-full">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="material-symbols-outlined text-orange-400">help</span>
-              <h2 className="text-base font-medium text-[#f0f0f0]">Agronomy & Tech Support</h2>
+              <span className="material-symbols-outlined text-emerald-400">help</span>
+              <h2 className="text-base font-bold text-white">NER Agri-Cold Support</h2>
             </div>
             <p className="text-xs text-white/60 mb-6 leading-relaxed">
-              24/7 cold storage engineering support for solar microgrid or climate calibration questions.
+              24/7 dedicated engineering support for solar mini cold storage, PCM cooling maintenance, and e-NAM mandi dispatch assistance.
             </p>
           </div>
 
           <div className="space-y-3 mt-4">
             <button
-              onClick={() => alert('Initiating direct support call: +91 1800-CROPIQ-HELP')}
-              className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95 transition-all text-xs uppercase tracking-wider"
+              onClick={() => alert('Calling CROPIQ Farmer Support Helpline: 1800-CROPIQ-NER')}
+              className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all text-xs uppercase tracking-wider"
             >
               <span className="material-symbols-outlined text-lg">call</span>
-              <span>Direct Hotline</span>
+              <span>Toll-Free Farmer Hotline</span>
             </button>
 
             <button
@@ -231,9 +245,20 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               onClick={onOpenChatSupport}
               className="w-full bg-white/5 border border-white/10 text-white hover:bg-white/10 font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all text-xs uppercase tracking-wider"
             >
-              <span className="material-symbols-outlined text-lg text-orange-400">chat</span>
+              <span className="material-symbols-outlined text-lg text-emerald-400">chat</span>
               <span>AI CropIQ Assistant</span>
             </button>
+
+            {onOpenInstallModal && (
+              <button
+                id="btn-install-app-profile"
+                onClick={onOpenInstallModal}
+                className="w-full bg-emerald-500/15 border border-emerald-500/30 hover:bg-emerald-500 text-emerald-400 hover:text-black font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all text-xs uppercase tracking-wider group"
+              >
+                <span className="material-symbols-outlined text-lg">install_mobile</span>
+                <span>Install Mobile PWA App</span>
+              </button>
+            )}
           </div>
         </section>
       </div>
